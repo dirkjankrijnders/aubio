@@ -141,6 +141,9 @@ uint_t aubio_filter_get_samplerate (aubio_filter_t * f);
 */
 uint_t aubio_filter_set_samplerate (aubio_filter_t * f, uint_t samplerate);
 
+    
+uint_t aubio_filter_set_gain (aubio_filter_t * f, lsmp_t gain);
+    
 /** reset filter memory
 
   \param f filter object as returned by new_aubio_filter()
@@ -166,6 +169,9 @@ aubio_filter_t *new_aubio_filter (uint_t order);
 
 */
 void del_aubio_filter (aubio_filter_t * f);
+
+    
+void print_aubio_filter (aubio_filter_t * f);
 
 #ifdef __cplusplus
 }

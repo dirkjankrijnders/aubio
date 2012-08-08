@@ -7,10 +7,8 @@ bin_PROGRAMS = \
 	aubioonset \
 	aubiotrack \
 	aubionotes \
-	aubiomfcc
-
-noinst_PROGRAMS = \
-	aubiopitch
+	aubiomfcc \
+	aubiopitch \
 	aubioquiet
 
 EXTRA_DIST = utils.h sndfileio.h jackio.h

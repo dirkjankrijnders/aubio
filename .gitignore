@@ -68,3 +68,13 @@ src/stamp-h1
 doc/devel/
 doc/user/
 doc/examples/
+
+examples/aubiomfcc
+audio.xcworkspace/contents.xcworkspacedata
+audio.xcworkspace/xcuserdata/dirkjan.xcuserdatad/UserInterfaceState.xcuserstate
+examples/aubionotes
+examples/aubioonset
+examples/aubiopitch
+examples/aubiotrack
+python/aubio/aubio_wrap.c
+python/aubio/aubiowrapper.py

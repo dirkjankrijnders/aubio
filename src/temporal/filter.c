@@ -36,6 +36,7 @@ struct _aubio_filter_t
   lvec_t *b;
   lvec_t *y;
   lvec_t *x;
+    lsmp_t gain;
 };
 
 void
@@ -53,10 +54,10 @@ aubio_filter_do (aubio_filter_t * f, fvec_t * in)
   lsmp_t *y = f->y->data;
   lsmp_t *a = f->a->data;
   lsmp_t *b = f->b->data;
-
+  // printf("Gain: %f", f->gain);
   for (j = 0; j < in->length; j++) {
     /* new input */
-    x[0] = KILL_DENORMAL (in->data[j]);
+      x[0] = KILL_DENORMAL (in->data[j]);// / f->gain;
     y[0] = b[0] * x[0];
     for (l = 1; l < order; l++) {
       y[0] += b[l] * x[l];
@@ -70,6 +71,24 @@ aubio_filter_do (aubio_filter_t * f, fvec_t * in)
       y[l] = y[l - 1];
     }
   }
+
+}
+
+void print_aubio_filter (aubio_filter_t * f){
+    uint_t j, l, order = f->order;
+//    lsmp_t *x = f->x->data;
+//    lsmp_t *y = f->y->data;
+    lsmp_t *a = f->a->data;
+    lsmp_t *b = f->b->data;
+
+    printf("\ny[0] = b[0] * x[0] = %Lf * x[0]\n", b[0]);
+    for (l = 1; l < order; l++) {
+        printf("     + b[%i] * x[%i] = %Lf * x[%i]\n", l,l, b[l], l);
+    }
+    for (l = 1; l < order; l++) {
+        printf("     - a[%i] * y[%i] = %Lf * y[%i]\n", l,l, a[l], l);
+    }
+    
 }
 
 /* The rough way: reset memory of filter between each run to avoid end effects. */
@@ -123,6 +142,11 @@ aubio_filter_set_samplerate (aubio_filter_t * f, uint_t samplerate)
   return AUBIO_OK;
 }
 
+uint_t aubio_filter_set_gain (aubio_filter_t * f, lsmp_t gain)
+{
+    f->gain = gain;
+    return AUBIO_OK;
+}
 void
 aubio_filter_do_reset (aubio_filter_t * f)
 {
@@ -141,6 +165,7 @@ new_aubio_filter (uint_t order)
   /* by default, samplerate is not set */
   f->samplerate = 0;
   f->order = order;
+  f->gain = 1;
   /* set default to identity */
   f->a->data[1] = 1.;
   return f;

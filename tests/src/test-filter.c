@@ -1,4 +1,8 @@
+
+#define HAVE_AUBIO_DOUBLE 1
+
 #include <aubio.h>
+#include <stdio.h>
 
 int
 main (void)
@@ -7,32 +11,20 @@ main (void)
   uint_t win_s = 32;            /* window size */
   fvec_t *in = new_fvec (win_s);      /* input buffer */
   fvec_t *out = new_fvec (win_s);     /* input buffer */
-
-
-  aubio_filter_t *o = new_aubio_filter_c_weighting (44100);
-  in->data[12] = 0.5;
-  fvec_print (in);
-  aubio_filter_do (o, in);
-  fvec_print (in);
-  del_aubio_filter (o);
-
-  o = new_aubio_filter_c_weighting (44100);
-  in->data[12] = 0.5;
-  fvec_print (in);
-  aubio_filter_do_outplace (o, in, out);
-  fvec_print (out);
-  del_aubio_filter (o);
-
-  o = new_aubio_filter_c_weighting (44100);
-  in->data[12] = 0.5;
-  fvec_print (in);
-  aubio_filter_do_filtfilt (o, in, out);
-  fvec_print (out);
-  del_aubio_filter (o);
-
+    smpl_t fc = (smpl_t)13500.;
+    aubio_filter_t *o = new_aubio_filter_1thirdoctave(48000, fc);
+  print_aubio_filter( o);
+  in->data[2] = 1;
+  aubio_filter_do_outplace(o, in, out);
+  int i;
+  for (i = 0; i < win_s; i++) {
+    printf(" %f\n", out->data[i]);
+  }
+  
   del_fvec (in);
   del_fvec (out);
   aubio_cleanup ();
+
 
   return 0;
 }
